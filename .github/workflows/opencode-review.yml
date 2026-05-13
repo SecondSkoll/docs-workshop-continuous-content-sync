@@ -21,17 +21,7 @@ jobs:
         with:
           persist-credentials: false
           fetch-depth: 0
-
-        with:
-          model: anthropic/claude-sonnet-4-20250514
-          use_github_token: true
-          prompt: |
-            Review this pull request:
-            - Check for code quality issues
-            - Look for potential bugs
-            - Suggest improvements
-
-      - name: Check PR diff for docs impact
+      - uses: anomalyco/opencode/github@latest
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
