@@ -2,7 +2,12 @@ name: Opencode PR diff for doc check
 
 on:
   pull_request_target:
-    types: [opened, synchronize, reopened]
+    types:
+      - opened
+      - edited
+      - synchronize
+    branches:
+      - 'main'
 
 permissions:
   contents: read
