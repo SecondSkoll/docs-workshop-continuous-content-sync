@@ -40,5 +40,25 @@ jobs:
           echo "Changed files in PR diff:"
           printf '%s\n' "${changed_files[@]}"
 
+          combined_diff_file="pr.diff"
+          : > "$combined_diff_file"
+          matched_count=0
+
+          for file in "${changed_files[@]}"; do
+            case "$file" in
+              *.py|*.txt) 
+                git diff "$BASE_SHA" "$HEAD_SHA" -- "$file" >> "$combined_diff_file"
+                matched_count=$((matched_count + 1))
+                ;;
+            esac
+          done
+
+          if [ "$matched_count" -eq 0 ]; then
+            echo "No changed .py or .txt files in PR diff."
+            exit 0
+          fi
+
+          echo "Combined diff file created: $combined_diff_file"
+
           workshop launch
-          workshop cat "${changed_files[@]}"
+          workshop exec workshop-doc-content-sync cat "$combined_diff_file"
