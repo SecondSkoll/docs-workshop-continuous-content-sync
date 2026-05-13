@@ -37,6 +37,7 @@ jobs:
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
         run: |
+          export OPENROUTER_API_KEY="${OPENROUTER_API_KEY}"
           opencode run --agent caveman "$(cat pr.diff)" > review.txt
           cat review.txt
 
