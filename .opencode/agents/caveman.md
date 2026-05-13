@@ -1,7 +1,7 @@
 ---
 description: Reviews code for quality and best practices
 mode: primary
-model: deepseek/deepseek-v4-flash
+model: openrouter/deepseek/deepseek-v4-flash
 temperature: 0.1
 permission:
   edit: deny
