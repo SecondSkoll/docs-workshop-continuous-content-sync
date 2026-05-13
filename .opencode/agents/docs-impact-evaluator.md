@@ -9,6 +9,7 @@ permission:
   bash: deny
 skill:
   evaluate-documentation-impact: allow
+  scout-docs: allow
 ---
 
 # Documentation impact evaluator
