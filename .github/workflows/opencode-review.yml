@@ -34,12 +34,12 @@ jobs:
       - name: Install opencode
         run: npm install -g opencode-ai
 
-      - name: Analyze diff with opencode caveman agent
+      - name: Analyze diff with opencode docs-impact-eval agent
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
         run: |
           export OPENROUTER_API_KEY="${OPENROUTER_API_KEY}"
-          opencode run --agent caveman "$(cat pr.diff)" > review.txt
+          opencode run --agent docs-impact-eval "$(cat pr.diff)" > review.txt
           cat review.txt
 
       - name: Post review as PR comment

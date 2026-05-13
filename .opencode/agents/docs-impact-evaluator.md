@@ -1,5 +1,5 @@
 ---
-name: Documentation impact evaluator
+name: docs-impact-eval
 description: Review changes to a code base and evaluate which parts of the documentation require update
 mode: primary
 model: openrouter/deepseek/deepseek-v4-flash
