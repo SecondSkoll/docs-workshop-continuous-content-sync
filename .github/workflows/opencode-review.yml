@@ -27,6 +27,7 @@ jobs:
         run: |
           git fetch --no-tags --depth=1 origin "$BASE_SHA"
           git diff "$BASE_SHA" "$HEAD_SHA" -- '*.py' '*.md' '*.go'> pr.diff
+          cat pr.diff
 
       - name: Install opencode
         run: npm install -g opencode-ai
@@ -36,7 +37,7 @@ jobs:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
         run: |
           export OPENROUTER_API_KEY="${OPENROUTER_API_KEY}"
-          opencode run --agent docs-impact-eval "$(cat pr.diff)" > review.txt
+          opencode run --agent docs-impact-eval "Evaluate the following diff: $(cat pr.diff)" > review.txt
           cat review.txt
 
       - name: Post review as PR comment
