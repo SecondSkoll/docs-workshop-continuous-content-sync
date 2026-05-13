@@ -1,17 +1,8 @@
 name: Opencode PR diff for doc check
 
 on:
-  pull_request_target:
-    types:
-      - opened
-      - edited
-      - synchronize
-    branches:
-      - 'main'
-
-permissions:
-  contents: read
-  pull-requests: read
+  pull_request:
+    types: [opened, synchronize, reopened]
 
 jobs:
   review:
@@ -32,7 +23,7 @@ jobs:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.ISSUE_WRITE_TOKEN }}
         with:
           model: deepseek/deepseek-v4-flash
           use_github_token: true
