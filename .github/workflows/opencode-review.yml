@@ -30,22 +30,14 @@ jobs:
           git fetch --no-tags --depth=1 origin "$BASE_SHA"
           git diff "$BASE_SHA" "$HEAD_SHA" -- '*.py' '*.md' > pr.diff
 
-      - name: Analyze diff with OpenRouter
+      - name: Install opencode
+        run: npm install -g opencode-ai
+
+      - name: Analyze diff with opencode caveman agent
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
         run: |
-          diff_content=$(cat pr.diff)
-          prompt="Analyze the PR diff below for any changes that may impact documentation.\n\n${diff_content}"
-
-          response=$(curl -sS https://openrouter.ai/api/v1/chat/completions \
-            -H "Authorization: Bearer $OPENROUTER_API_KEY" \
-            -H "Content-Type: application/json" \
-            -d "$(jq -n \
-              --arg model "deepseek/deepseek-v4-flash" \
-              --arg content "$prompt" \
-              '{model: $model, messages: [{role: "user", content: $content}]}')")
-
-          echo "$response" | jq -r '.choices[0].message.content' > review.txt
+          opencode run --agent caveman "$(cat pr.diff)" > review.txt
           cat review.txt
 
       - name: Post review as PR comment
