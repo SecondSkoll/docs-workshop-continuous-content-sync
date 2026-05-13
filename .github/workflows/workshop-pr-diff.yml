@@ -46,7 +46,7 @@ jobs:
 
           for file in "${changed_files[@]}"; do
             case "$file" in
-              *.py|*.txt) 
+              *.py|*.txt|*.md) 
                 git diff "$BASE_SHA" "$HEAD_SHA" -- "$file" >> "$combined_diff_file"
                 matched_count=$((matched_count + 1))
                 ;;
