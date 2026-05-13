@@ -1,0 +1,44 @@
+name: Workshop PR Diff
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  workshop-on-pr-diff:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run workshop on PR diff
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+
+          git fetch --no-tags --depth=1 origin "$BASE_SHA" "$HEAD_SHA"
+
+          mapfile -d '' changed_files < <(git diff --name-only -z "$BASE_SHA" "$HEAD_SHA")
+
+          if [ "${#changed_files[@]}" -eq 0 ]; then
+            echo "No changed files in PR diff."
+            exit 0
+          fi
+
+          sudo snap refresh lxd --channel=6/stable || sudo snap install lxd --channel=6/stable
+          sudo snap install workshop --classic
+
+          echo "Changed files in PR diff:"
+          printf '%s\n' "${changed_files[@]}"
+
+          workshop launch
+          workshop cat "${changed_files[@]}"
