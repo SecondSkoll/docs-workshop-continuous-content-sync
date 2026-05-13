@@ -29,7 +29,7 @@ jobs:
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
           git fetch --no-tags --depth=1 origin "$BASE_SHA"
-          git diff "$BASE_SHA" "$HEAD_SHA" -- '*.py' '*.md' > pr.diff
+          git diff "$BASE_SHA" "$HEAD_SHA" -- '*.py' '*.md' '*.go'> pr.diff
 
       - name: Install opencode
         run: npm install -g opencode-ai
