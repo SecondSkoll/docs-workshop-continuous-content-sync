@@ -1,8 +1,13 @@
 name: Opencode PR diff for doc check
 
 on:
-  pull_request:
-    types: [opened, synchronize, reopened]
+  pull_request_target:
+    types:
+      - opened
+      - edited
+      - synchronize
+    branches:
+      - 'main'
 
 jobs:
   review:
@@ -23,7 +28,7 @@ jobs:
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
           git fetch --no-tags --depth=1 origin "$BASE_SHA"
-          git diff "$BASE_SHA" "$HEAD_SHA" > pr.diff
+          git diff "$BASE_SHA" "$HEAD_SHA" -- '*.py' '*.md' > pr.diff
 
       - name: Analyze diff with OpenRouter
         env:
@@ -45,7 +50,7 @@ jobs:
 
       - name: Post review as PR comment
         env:
-          GITHUB_TOKEN: ${{ secrets.ISSUE_WRITE_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           review=$(cat review.txt)
           curl -sS -X POST \
